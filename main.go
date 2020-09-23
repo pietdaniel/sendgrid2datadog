@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 
@@ -61,6 +62,7 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		log.Println(err)
 		fmt.Fprintf(w, "%s", err)
 		return
 	}
@@ -69,6 +71,7 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.Unmarshal(body, &events); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		log.Println(err)
 		fmt.Fprintf(w, "%s", err)
 		return
 	}
@@ -76,6 +79,7 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 	for _, event := range events {
 		if err := statsdClient.Incr(metricPrefix+event.Event, nil, 1); err != nil {
 			w.WriteHeader(http.StatusBadGateway)
+			log.Println(err)
 			fmt.Fprintf(w, "%s", err)
 			return
 		}
