@@ -30,16 +30,16 @@ var (
 // SendGridEvents represents the scheme of Event Webhook body
 // https://sendgrid.com/docs/API_Reference/Webhooks/event.html#-Event-POST-Example
 type SendGridEvents []struct {
-	Email       string `json:"email"`
-	Timestamp   int    `json:"timestamp"`
-	SMTPID      string `json:"smtp-id,omitempty"`
-	Event       string `json:"event"`
-	Category    string `json:"category,omitempty"`
-	SGEventID   string `json:"sg_event_id"`
-	SGMessageID string `json:"sg_message_id"`
-	Useragent   string `json:"useragent,omitempty"`
-	URL         string `json:"url,omitempty"`
-	AsmGroupID  int    `json:"asm_group_id,omitempty"`
+	Email       string   `json:"email"`
+	Timestamp   int      `json:"timestamp"`
+	SMTPID      string   `json:"smtp-id,omitempty"`
+	Event       string   `json:"event"`
+	Category    []string `json:"category,omitempty"`
+	SGEventID   string   `json:"sg_event_id"`
+	SGMessageID string   `json:"sg_message_id"`
+	Useragent   string   `json:"useragent,omitempty"`
+	URL         string   `json:"url,omitempty"`
+	AsmGroupID  int      `json:"asm_group_id,omitempty"`
 }
 
 func pingHandler(w http.ResponseWriter, r *http.Request) {
