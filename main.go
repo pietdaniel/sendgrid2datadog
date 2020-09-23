@@ -82,6 +82,8 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 			fmt.Fprintf(w, "%s", err)
 			return
+		} else {
+			log.Println(metricPerfix + event.Event)
 		}
 	}
 }
