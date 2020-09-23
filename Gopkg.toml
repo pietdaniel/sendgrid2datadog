@@ -24,6 +24,10 @@
 #   go-tests = true
 #   unused-packages = true
 
+[metadata.heroku]
+  root-package = "github.com/pietdaniel/sendgrid2datadog"
+  go-version = "1.13.7"
+  # install = [ "." ]
 
 [[constraint]]
   name = "github.com/DataDog/datadog-go"
