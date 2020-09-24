@@ -28,7 +28,8 @@ var (
 )
 
 // SendGridEvents represents the scheme of Event Webhook body
-// https://sendgrid.com/docs/API_Reference/Webhooks/event.html#-Event-POST-Example
+// 
+https://sendgrid.com/docs/for-developers/tracking-events/event/
 type SendGridEvents []struct {
 	Email       string   `json:"email"`
 	Timestamp   int      `json:"timestamp"`
@@ -48,6 +49,11 @@ func pingHandler(w http.ResponseWriter, r *http.Request) {
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "https://github.com/dtan4/sendgrid2datadog")
+}
+
+func eventUnmarshal(b []byte) SendGridEvents {
+	var events SendGridEvents
+	return events
 }
 
 func webhookHandler(w http.ResponseWriter, r *http.Request) {
@@ -77,13 +83,12 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, event := range events {
+		// event.Category
 		if err := statsdClient.Incr(metricPrefix+event.Event, nil, 1); err != nil {
 			w.WriteHeader(http.StatusBadGateway)
 			log.Println(err)
 			fmt.Fprintf(w, "%s", err)
 			return
-		} else {
-			log.Println(metricPrefix + event.Event)
 		}
 	}
 }
