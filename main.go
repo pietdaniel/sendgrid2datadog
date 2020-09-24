@@ -28,8 +28,7 @@ var (
 )
 
 // SendGridEvents represents the scheme of Event Webhook body
-// 
-https://sendgrid.com/docs/for-developers/tracking-events/event/
+// https://sendgrid.com/docs/for-developers/tracking-events/event/
 type SendGridEvents []struct {
 	Email       string   `json:"email"`
 	Timestamp   int      `json:"timestamp"`
@@ -41,6 +40,9 @@ type SendGridEvents []struct {
 	Useragent   string   `json:"useragent,omitempty"`
 	URL         string   `json:"url,omitempty"`
 	AsmGroupID  int      `json:"asm_group_id,omitempty"`
+	Reason      string   `json:"reason,omitempty"`
+	Status      string   `json:"status,omitempty"`
+	Response    string   `json:"response,omitempty"`
 }
 
 func pingHandler(w http.ResponseWriter, r *http.Request) {
@@ -51,9 +53,11 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "https://github.com/dtan4/sendgrid2datadog")
 }
 
-func eventUnmarshal(b []byte) SendGridEvents {
-	var events SendGridEvents
-	return events
+func eventUnmarshal(b []byte, e *SendGridEvents) error {
+	if err := json.Unmarshal(b, &e); err != nil {
+		return err
+	}
+	return nil
 }
 
 func webhookHandler(w http.ResponseWriter, r *http.Request) {
@@ -75,22 +79,41 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 
 	var events SendGridEvents
 
-	if err := json.Unmarshal(body, &events); err != nil {
+	if err = eventUnmarshal(body, &events); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		log.Println(err)
 		fmt.Fprintf(w, "%s", err)
 		return
 	}
 
+	if err := submitMetrics(events); err != nil {
+		w.WriteHeader(http.StatusBadGateway)
+		log.Println(err)
+		fmt.Fprintf(w, "%s", err)
+		return
+	}
+}
+
+func submitMetrics(events SendGridEvents) error {
 	for _, event := range events {
-		// event.Category
-		if err := statsdClient.Incr(metricPrefix+event.Event, nil, 1); err != nil {
-			w.WriteHeader(http.StatusBadGateway)
-			log.Println(err)
-			fmt.Fprintf(w, "%s", err)
-			return
+		var tags []string
+		for _, c := range event.Category {
+			tags = append(tags, fmt.Sprintf("category:%s", c))
+		}
+
+		if event.Reason != "" {
+			tags = append(tags, fmt.Sprintf("reason:%s", event.Reason))
+		}
+
+		if event.Response != "" {
+			tags = append(tags, fmt.Sprintf("reason:%s", event.Response))
+		}
+
+		if err := statsdClient.Incr(metricPrefix+event.Event, tags, 1); err != nil {
+			return err
 		}
 	}
+	return nil
 }
 
 func checkAuth(r *http.Request) bool {
