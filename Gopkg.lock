@@ -2,32 +2,77 @@
 
 
 [[projects]]
+  digest = "1:e0121889131972d72a864b2c5f2c08310a17d21627fa124be7149f54599228b5"
   name = "github.com/DataDog/datadog-go"
   packages = ["statsd"]
+  pruneopts = "UT"
   revision = "909c02b65dd8a52e8fa6072db9752a112227cf21"
   version = "1.0.0"
 
 [[projects]]
+  digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  pruneopts = "UT"
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
+
+[[projects]]
   branch = "master"
+  digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
+  pruneopts = "UT"
   revision = "08b5f424b9271eedf6f9f0ce86cb9396ed337a42"
 
 [[projects]]
+  digest = "1:8b50a0d9f77f0cf5c4e8a4c76fa24dbfd1baf5eed53d5e791026d981c3053de9"
   name = "github.com/gorilla/handlers"
   packages = ["."]
+  pruneopts = "UT"
   revision = "ee54c7b44cab12289237fb8631314790076e728b"
   version = "v1.1"
 
 [[projects]]
+  digest = "1:af7adad5ef24d9241808e46347b7e97c38a387afca772069e2ad1d9fbb660fc6"
   name = "github.com/gorilla/mux"
   packages = ["."]
+  pruneopts = "UT"
   revision = "0eeaf8392f5b04950925b8a69fe70f110fa7cbfc"
   version = "v1.1"
+
+[[projects]]
+  digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  pruneopts = "UT"
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "1:2c8bb9a0858e2ab458c1641345b6eaa3754b7ae453f8d30b15701f8b12b7ead7"
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  pruneopts = "UT"
+  revision = "f654a9112bbeac49ca2cd45bfbe11533c4666cf8"
+  version = "v1.6.1"
+
+[[projects]]
+  branch = "v3"
+  digest = "1:229cb0f6192914f518cc1241ede6d6f1f458b31debfa18bf3a5c9e4f7b01e24b"
+  name = "gopkg.in/yaml.v3"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "eeeca48fe7764f320e4870d231902bf9c1be2c08"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "dfda04f71e167e46814d5521b308029ed5e03834cf2e7e0650b104f986367f55"
+  input-imports = [
+    "github.com/DataDog/datadog-go/statsd",
+    "github.com/gorilla/handlers",
+    "github.com/gorilla/mux",
+    "github.com/stretchr/testify/assert",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
